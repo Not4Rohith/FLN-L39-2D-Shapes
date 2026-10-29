@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L39 Shape Practice</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#e7e7e7;color:#111;font-family:Arial,Helvetica,sans-serif}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:#fff;border-bottom:1px solid #aaa}
+.toolbar button,.toolbar input{font:inherit;font-size:13px;border:1px solid #555;border-radius:5px;background:#fff;padding:7px 10px}
+.toolbar button{cursor:pointer}.toolbar .primary{background:#111;color:#fff}.toolbar label{display:flex;align-items:center;gap:6px;font-size:12px}.toolbar input{width:105px}.status{margin-left:auto;font-size:11px;color:#444}
+#sheet{padding:12px 0 24px}
+.page{width:210mm;height:297mm;margin:0 auto 12px;padding:12mm 13mm 10mm;background:#fff;position:relative;overflow:hidden;box-shadow:0 3px 18px #00000012;break-after:page;page-break-after:always}
+.page:last-child{break-after:auto;page-break-after:auto}
+.page-inner{height:100%;display:flex;flex-direction:column;min-height:0}
+.header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #111;padding-bottom:3mm;margin-bottom:4mm}
+.mark{width:13mm;height:13mm;flex:none}.brand{font-size:7pt;letter-spacing:1.5px;font-weight:bold}.step{font-size:7pt;letter-spacing:1px}
+.object-brand-header{display:flex;align-items:center;justify-content:space-between;border-bottom:.35mm solid #111;padding-bottom:2.5mm;margin-bottom:2mm;font-size:7pt;letter-spacing:1.4px;font-weight:bold}
+.object-brand-header .section-name{font-weight:normal;letter-spacing:1.2px}
+.object-stage{display:flex;align-items:center;gap:3mm;margin:0 0 3mm;min-height:12mm}
+.object-stage .num{width:16mm;height:16mm;font-size:15pt;border:1.1mm solid #111}
+.object-stage .title{font-size:15pt;letter-spacing:-.3px}
+.object-stage .hint{font-size:8pt;letter-spacing:0;color:#111;max-width:48%;text-align:right;line-height:1.25}
+.object-page .object-row{grid-template-columns:66mm 1fr;gap:4mm;padding:2mm 0}
+.object-page .object-ref svg{width:58mm;height:36mm;flex:none}
+.object-page .object-space{border:.35mm solid #777;border-radius:4mm}
+.object-page .footer{border-top:.35mm solid #111;margin-top:2mm;padding-top:2mm;font-size:6pt;letter-spacing:1px;color:#111}
+.footer-brand{font-weight:bold;letter-spacing:1.1px}
+.footer-center{font-size:8pt;font-weight:bold;letter-spacing:1px;color:#111}
+.footer-tag{letter-spacing:1px;font-weight:bold}
+.footer-dots{letter-spacing:2px;margin:0 1mm}
+h1{font-size:19pt;line-height:1;margin:0 0 3mm;letter-spacing:-.5px}
+.name{display:flex;gap:8mm;font-size:8pt;margin:1mm 0 4mm}.line{display:inline-block;width:43mm;border-bottom:.3mm solid #777;height:5mm}
+.stage-title{display:flex;align-items:center;gap:3mm;margin:1mm 0 4mm}
+.num{width:8mm;height:8mm;border:1px solid #111;border-radius:50%;display:grid;place-items:center;font-size:9pt;font-weight:bold;flex:none}
+.title{font-size:10pt;font-weight:bold}.hint{margin-left:auto;font-size:7pt;color:#555}
+svg{display:block;width:100%;height:100%;overflow:visible}
+.ref{fill:none;stroke:#111;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.trace{fill:none;stroke:#777;stroke-width:2.6;stroke-dasharray:1.8 3.2;stroke-linecap:round;stroke-linejoin:round}
+.trace.light{stroke:#aaa;stroke-width:2.2;stroke-dasharray:1.5 4}
+.soft{fill:none;stroke:#aaa;stroke-width:2;stroke-dasharray:1.5 4;stroke-linecap:round;stroke-linejoin:round}
+.row-trace{display:grid;grid-template-columns:27mm repeat(3,minmax(0,1fr));gap:4mm;align-items:center;flex:1;min-height:0;border-bottom:.25mm solid #ddd;padding:3mm 0}
+.row-trace:last-child{border-bottom:0}
+.ref-shape{width:25mm;height:25mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1mm;flex:none}.shape-label,.object-label{font-size:7pt;font-weight:bold;text-align:center;line-height:1.1;color:#222}.ref-shape svg{width:21mm;height:21mm;flex:none}
+.trace-cell{height:38mm;border:.3mm solid #ccc;border-radius:2mm;display:flex;align-items:center;justify-content:center;padding:2mm}
+.trace-cell svg{max-width:100%;max-height:100%}
+.work-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:4mm;flex:1;min-height:0}
+.work-card{border:.3mm solid #aaa;border-radius:3mm;padding:4mm;display:flex;flex-direction:column;min-height:0}
+.work-head{height:27mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1mm;margin-bottom:3mm}
+.work-ref{width:18mm;height:18mm;flex:none}.work-head .shape-label{font-size:7pt}
+.work-space{flex:1;min-height:0;border:.3mm solid #888;border-radius:2mm;position:relative}
+.object-list{display:flex;flex-direction:column;gap:4mm;flex:1;min-height:0}
+.object-row{display:grid;grid-template-columns:43mm 1fr;gap:5mm;align-items:stretch;flex:1;min-height:0;padding:2mm 0;border-bottom:.3mm solid #ddd}
+.object-row:last-child{border-bottom:0}
+.object-ref{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5mm;padding:2mm}.object-label{font-size:8pt}
+.object-ref svg{width:38mm;height:42mm;max-width:100%;max-height:100%}
+.object-space{border:.3mm solid #888;border-radius:3mm;position:relative}
+.footer{border-top:.3mm solid #bbb;margin-top:3mm;padding-top:2mm;display:flex;justify-content:space-between;align-items:center;font-size:6pt;letter-spacing:.8px;color:#555}
+.footer .dots{letter-spacing:2px}
+
+.match-instructions{font-size:8pt;margin:0 0 3mm;line-height:1.3;text-align:center}
+.match-board{display:grid;grid-template-columns:minmax(0,1fr) 22mm minmax(0,1fr);gap:4mm;flex:1;min-height:0;align-items:stretch}
+.match-column{display:flex;flex-direction:column;justify-content:space-around;min-height:0}
+.match-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:0}
+.match-column:not(.match-center) .match-item{height:14.285%;padding:.25mm}
+.match-item svg{width:19mm;height:18mm;max-width:100%;flex:none}
+.match-item .item-label{font-size:6.5pt;font-weight:bold;margin-top:.3mm;line-height:1.05}
+.match-center{height:44%;align-self:center;justify-content:space-between}
+.match-center .match-item{height:auto;flex:1;}
+.match-center .match-item svg{width:10.5mm;height:9.5mm}
+.match-center .item-label{font-size:6.5pt}
+.match-item.object{padding:.5mm}
+\n@page{size:A4;margin:0}
+@media print{html,body{background:#fff}.toolbar{display:none!important}#sheet{padding:0}.page{margin:0;box-shadow:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<nav class="toolbar">
+<button class="primary" id="new">New version</button>
+<label>Seed <input id="seed" maxlength="12" autocomplete="off" spellcheck="false"></label>
+<button id="apply">Apply</button>
+<button id="print">Print A4</button>
+<span class="status" id="status"></span>
+</nav>
+<main id="sheet"></main>
+<script>
+(()=>{'use strict';
+const SHAPES={
+ circle:'<circle cx="50" cy="50" r="31"/>',
+ triangle:'<polygon points="50,15 84,79 16,79"/>',
+ square:'<rect x="20" y="20" width="60" height="60"/>',
+ rectangle:'<rect x="12" y="29" width="76" height="42"/>',
+ oval:'<ellipse cx="50" cy="50" rx="36" ry="24"/>',
+ diamond:'<polygon points="50,12 84,50 50,88 16,50"/>',
+ pentagon:'<polygon points="50,12 84,38 71,80 29,80 16,38"/>',
+ hexagon:'<polygon points="30,16 70,16 88,50 70,84 30,84 12,50"/>'
+};
+const OBJECTS={
+ house:'<polygon points="14,44 50,14 86,44"/><rect x="22" y="44" width="56" height="44"/><rect x="44" y="62" width="12" height="26"/><rect x="29" y="53" width="10" height="10"/><rect x="61" y="53" width="10" height="10"/>',
+ tree:'<polygon points="50,12 25,47 38,47 19,68 42,68 42,88 58,88 58,68 81,68 62,47 75,47"/><path d="M50 68V88"/>',
+ car:'<path d="M10 61 L20 53 L31 42 H69 L80 53 L90 61 V72 H10 Z"/><circle cx="28" cy="72" r="9"/><circle cx="28" cy="72" r="4"/><circle cx="72" cy="72" r="9"/><circle cx="72" cy="72" r="4"/>',
+ flower:'<circle cx="50" cy="37" r="10"/><circle cx="50" cy="18" r="9"/><circle cx="69" cy="37" r="9"/><circle cx="50" cy="56" r="9"/><circle cx="31" cy="37" r="9"/><path d="M50 47 V88 M50 68 Q37 55 30 68 Q40 78 50 68"/>',
+ boat:'<path d="M12 57 H88 L72 78 H29 Z"/><path d="M48 18 V56 M50 22 L76 49 H50 Z M44 29 L23 49 H44 Z"/><path d="M20 86 Q30 81 40 86 T60 86 T80 86"/>',
+ fish:'<path d="M15 50 Q35 22 65 43 L84 29 V70 L65 57 Q35 78 15 50 Z"/><circle cx="31" cy="45" r="2.5"/><path d="M47 39 Q57 50 47 61"/>',
+ sun:'<circle cx="50" cy="50" r="19"/><path d="M50 12 V23 M50 77 V88 M12 50 H23 M77 50 H88 M23 23 L31 31 M69 69 L77 77 M77 23 L69 31 M31 69 L23 77"/>',
+ kite:'<polygon points="50,12 78,43 50,73 22,43"/><path d="M50 12 V73 M22 43 H78 M50 73 Q64 78 57 87 Q48 91 56 96"/> '
+};
+const ids=Object.keys(SHAPES), oids=Object.keys(OBJECTS);
+const svg=(d,cls='ref')=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="${cls}" aria-hidden="true">${d}</svg>`;
+const mark='<svg class="mark" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="26" fill="none" stroke="#111" stroke-width="2"/><path d="M14 38 L30 12 L46 38 Z M21 30 H39" fill="none" stroke="#111" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+function labelize(id){return ({pizzaSlice:'Pizza slice',partyhat:'Party hat'}[id]||String(id).replace(/([a-z])([A-Z])/g,'$1 $2')).replace(/\b\w/g,c=>c.toUpperCase())}
+function hash(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rng(s){let a=hash(s)();return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function clean(s){return String(s||'').replace(/[^a-z0-9]/gi,'').slice(0,12).toUpperCase()}
+function newSeed(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';if(typeof crypto!=='undefined' && crypto.getRandomValues){const a=new Uint32Array(6);crypto.getRandomValues(a);for(const n of a)s+=chars[n%chars.length]}else for(let i=0;i<6;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s}
+function head(n){
+ if(n>=5)return `<div class="object-brand-header"><span>L39 SHAPE PRACTICE</span><span class="section-name">DRAWING OBJECTS</span></div><div class="object-stage"><span class="num">${n}</span><span class="title">Draw the objects</span><span class="hint">Look at the picture and draw it in the box.</span></div>`;
+ const section=n<=2?'TRACE SHAPES':'COPY SHAPES';
+ return `<div class="object-brand-header"><span>L39 SHAPE PRACTICE</span><span class="section-name">${section}</span></div><div class="object-stage"><span class="num">${n}</span><span class="title">${n<=2?'Trace the shapes':'Copy the shapes'}</span>${n===1?'<span class="hint">Trace each shape in the boxes.</span>':n===2?'<span class="hint">Keep tracing the shapes.</span>':'<span class="hint">Look at each shape and draw it.</span>'}</div>`
+}
+function foot(seed,n){
+ return `<div class="footer"><span class="footer-brand">L39 SHAPE PRACTICE</span><span class="footer-center">${n} / 8</span><span class="footer-tag">KEEP PRACTICING <span class="footer-dots">● ● ●</span> YOU CAN DO IT!</span></div>`
+}
+function page(content,seed,n){return `<section class="page"><div class="page-inner">${content}${foot(seed,n)}</div></section>`}
+function tracePage(seed,n,shapes,variant){
+ let content=head(n);
+ if(n===1){content+=`<div class="name"><span>Name <i class="line"></i></span></div>`}
+ const style=variant===1?'trace':'trace light';
+ shapes.slice(0,4).forEach(id=>{content+=`<div class="row-trace"><div class="ref-shape">${svg(SHAPES[id])}<span class="shape-label">${labelize(id)}</span></div>${[0,1,2].map(()=>`<div class="trace-cell">${svg(SHAPES[id],style)}</div>`).join('')}</div>`});
+ return page(content,seed,n)
+}
+function copyPage(seed,n,shapes,clue){
+ let content=head(n)+'<div class="work-grid">';
+ shapes.forEach(id=>{let ref=clue===1?svg(SHAPES[id]):clue===2?svg(SHAPES[id],'soft'):'';
+ content+=`<div class="work-card"><div class="work-head">${ref?`<div class="work-ref">${ref}</div>`:'<div class="work-ref"></div>'}<span class="shape-label">${labelize(id)}</span></div><div class="work-space"></div></div>`});
+ content+='</div>';return page(content,seed,n)
+}
+function objectPage(seed,n,objects,clue){
+ let content=head(n)+'<div class="object-list object-page">';
+ objects.forEach(id=>{const shape=OBJECTS[id]||EXTRA_OBJECTS[id];const ref=clue===1?svg(shape):clue===2?svg(shape,'soft'):'';
+ content+=`<div class="object-row"><div class="object-ref">${ref}<span class="object-label">${labelize(id)}</span></div><div class="object-space"></div></div>`});
+ content+='</div>';return page(content,seed,n)
+}
+
+const MATCH_OBJECTS={
+ clock:{shape:'circle',label:'Clock',svg:'<circle cx="50" cy="48" r="30"/><path d="M50 28V48L65 58"/>'},
+ ball:{shape:'circle',label:'Ball',svg:'<circle cx="50" cy="50" r="32"/><path d="M30 24L43 37L40 56L22 65M43 37L64 34L78 48L68 69L40 56M64 34L69 19M68 69L79 82"/>'},
+ egg:{shape:'oval',label:'Egg',svg:'<path d="M50 15C68 15 80 38 80 57C80 76 67 87 50 87C33 87 20 76 20 57C20 38 32 15 50 15Z"/>'},
+ balloon:{shape:'oval',label:'Balloon',svg:'<ellipse cx="50" cy="40" rx="27" ry="34"/><path d="M44 73L50 80L56 73M50 80Q43 88 52 96"/>'},
+ dice:{shape:'square',label:'Dice',svg:'<rect x="18" y="18" width="64" height="64" rx="7"/><circle cx="34" cy="34" r="4" fill="#111"/><circle cx="66" cy="34" r="4" fill="#111"/><circle cx="50" cy="50" r="4" fill="#111"/><circle cx="34" cy="66" r="4" fill="#111"/><circle cx="66" cy="66" r="4" fill="#111"/>'},
+ gift:{shape:'square',label:'Gift box',svg:'<rect x="19" y="35" width="62" height="48"/><rect x="15" y="28" width="70" height="12"/><path d="M50 28V83M50 28C28 28 24 12 37 13C47 13 50 23 50 28ZM50 28C72 28 76 12 63 13C53 13 50 23 50 28Z"/>'},
+ book:{shape:'rectangle',label:'Book',svg:'<path d="M15 23Q33 17 50 27Q67 17 85 23V78Q67 72 50 82Q33 72 15 78Z"/><path d="M50 27V82"/>'},
+ laptop:{shape:'rectangle',label:'Laptop',svg:'<rect x="24" y="16" width="52" height="48" rx="3"/><path d="M14 68H86L80 80H20Z"/>'},
+ tent:{shape:'triangle',label:'Tent',svg:'<path d="M50 14L87 82H13Z"/><path d="M50 14V82L34 82Z"/>'},
+ sandwich:{shape:'triangle',label:'Sandwich',svg:'<path d="M15 76L50 18L85 76Z"/><path d="M22 66H78M27 58H73"/>'},
+ plate:{shape:'circle',label:'Plate',svg:'<circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="24"/>'},
+ biscuit:{shape:'circle',label:'Biscuit',svg:'<circle cx="50" cy="50" r="31"/><circle cx="39" cy="39" r="3"/><circle cx="61" cy="40" r="3"/><circle cx="49" cy="57" r="3"/><circle cx="63" cy="65" r="3"/>'},
+ door:{shape:'rectangle',label:'Door',svg:'<rect x="27" y="12" width="46" height="76"/><circle cx="63" cy="52" r="2"/>'},
+ phone:{shape:'rectangle',label:'Phone',svg:'<rect x="34" y="10" width="32" height="80" rx="5"/><rect x="39" y="19" width="22" height="58"/><circle cx="50" cy="83" r="2"/>'},
+ sign:{shape:'triangle',label:'Warning sign',svg:'<path d="M50 12L87 82H13Z"/><path d="M50 34V56"/><circle cx="50" cy="68" r="2" fill="#111"/>'},
+ pizza:{shape:'circle',label:'Pizza',svg:'<circle cx="50" cy="50" r="32"/><path d="M50 18V82M18 50H82M27 27L73 73M73 27L27 73"/><circle cx="39" cy="40" r="4"/><circle cx="62" cy="43" r="4"/><circle cx="48" cy="63" r="4"/>'},
+ coin:{shape:'circle',label:'Coin',svg:'<circle cx="50" cy="50" r="31"/><circle cx="50" cy="50" r="22"/><path d="M58 34Q42 27 39 42Q38 50 52 53Q65 57 60 68Q55 79 40 70"/>'},
+ button:{shape:'circle',label:'Button',svg:'<circle cx="50" cy="50" r="31"/><circle cx="40" cy="40" r="3"/><circle cx="60" cy="40" r="3"/><circle cx="40" cy="60" r="3"/><circle cx="60" cy="60" r="3"/>'},
+ rugby:{shape:'oval',label:'Rugby ball',svg:'<g transform="rotate(-25 50 50)"><ellipse cx="50" cy="50" rx="36" ry="23"/><path d="M18 50H82M37 44V56M47 44V56M57 44V56M67 44V56"/></g>'},
+ leaf:{shape:'oval',label:'Leaf',svg:'<path d="M18 78Q15 25 80 20Q88 78 18 78Z"/><path d="M18 78L73 31M39 61L38 43M53 50L69 52"/>'},
+ tile:{shape:'square',label:'Floor tile',svg:'<rect x="18" y="18" width="64" height="64"/><path d="M50 18V82M18 50H82"/>'},
+ cracker:{shape:'square',label:'Cracker',svg:'<rect x="18" y="18" width="64" height="64" rx="4"/><circle cx="35" cy="35" r="2"/><circle cx="65" cy="35" r="2"/><circle cx="50" cy="50" r="2"/><circle cx="35" cy="65" r="2"/><circle cx="65" cy="65" r="2"/>'},
+ envelope:{shape:'rectangle',label:'Envelope',svg:'<rect x="13" y="29" width="74" height="48"/><path d="M13 32L50 57L87 32M13 75L38 53M87 75L62 53"/>'},
+ television:{shape:'rectangle',label:'Television',svg:'<rect x="14" y="22" width="72" height="50" rx="4"/><path d="M50 72V83M36 84H64"/>'},
+ mirror:{shape:'rectangle',label:'Mirror',svg:'<rect x="27" y="12" width="46" height="72" rx="5"/><path d="M36 35L57 20M36 55L64 34"/>'},
+ pizzaSlice:{shape:'triangle',label:'Pizza slice',svg:'<path d="M50 15L84 82H16Z"/><path d="M31 53L69 53M25 67H75"/><circle cx="43" cy="45" r="3"/><circle cx="58" cy="63" r="3"/>'},
+ pennant:{shape:'triangle',label:'Pennant flag',svg:'<path d="M25 14V86M27 22L82 42L27 65Z"/>'},
+ partyhat:{shape:'triangle',label:'Party hat',svg:'<path d="M50 15L81 80H19Z"/><circle cx="50" cy="14" r="5"/><path d="M33 55L67 55"/>'}
+};
+function matchPage(seed,n,leftIds,rightIds){
+ const labels=['circle','oval','square','rectangle','triangle'];
+ let content=`<div class="object-brand-header"><span>L39 SHAPE PRACTICE</span><span class="section-name">MATCH THE SHAPES</span></div>
+ <div class="object-stage"><span class="num">${n}</span><span class="title">Match each object to a shape</span><span class="hint">Draw a line from each object to the shape that matches.</span></div>
+ <p class="match-instructions">Look at the objects on both sides. Match each one to the correct shape in the middle.</p>
+ <div class="match-board"><div class="match-column">`;
+ const objectItem=id=>{const o=MATCH_OBJECTS[id];return `<div class="match-item object"><svg viewBox="0 0 100 100" class="ref" aria-label="${o.label}">${o.svg}</svg><div class="item-label">${o.label}</div></div>`};
+ content+=leftIds.map(objectItem).join('');
+ content+=`</div><div class="match-column match-center">`;
+ content+=labels.map(id=>`<div class="match-item"><svg viewBox="0 0 100 100" class="ref" aria-label="${id}">${SHAPES[id]}</svg><div class="item-label">${id[0].toUpperCase()+id.slice(1)}</div></div>`).join('');
+ content+=`</div><div class="match-column">`+rightIds.map(objectItem).join('')+`</div></div>`;
+ return page(content,seed,n)
+}
+function make(seed){
+ const r=rng(seed);
+ const shapeOrder=shuffle(ids,r), objectOrder=shuffle(oids,r);
+ const matchLeftA=shuffle(['dice','balloon','laptop','tent','clock','plate','door'],r);
+ const matchRightA=shuffle(['sandwich','egg','gift','ball','book','biscuit','phone'],r);
+ const matchLeftB=shuffle(['pizza','coin','rugby','tile','envelope','pizzaSlice','button'],r);
+ const matchRightB=shuffle(['cracker','television','mirror','pennant','partyhat','leaf','sign'],r);
+ const pages=[
+  tracePage(seed,1,shapeOrder.slice(0,4),1),
+  tracePage(seed,2,shapeOrder.slice(4,8),1),
+  copyPage(seed,3,shapeOrder.slice(0,4),1),
+  copyPage(seed,4,shapeOrder.slice(4,8),1),
+  objectPage(seed,5,objectOrder.slice(0,4),1),
+  objectPage(seed,6,objectOrder.slice(4,8),1),
+  matchPage(seed,7,matchLeftA,matchRightA),
+  matchPage(seed,8,matchLeftB,matchRightB)
+ ];
+ document.getElementById('sheet').innerHTML=pages.join('');
+ document.getElementById('seed').value=seed;
+ document.getElementById('status').textContent='8 pages · '+seed;
+ try{const u=new URL(location.href);u.searchParams.set('seed',seed);history.replaceState(null,'',u)}catch(e){}
+}
+document.getElementById('new').onclick=()=>make(newSeed());
+document.getElementById('apply').onclick=()=>{const s=clean(document.getElementById('seed').value);if(s)make(s)};
+document.getElementById('seed').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('apply').click()});
+document.getElementById('print').onclick=()=>window.print();
+make(clean(new URLSearchParams(location.search).get('seed'))||newSeed());
+})();
+</script>
+</body>
+</html>
